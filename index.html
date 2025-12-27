@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>沖繩 2025 終極導航</title>
+    <style>
+        :root {
+            --primary: #0077b6; --secondary: #00b4d8; --bg: #f8f9fa;
+            --card-bg: #ffffff; --text: #333; --highlight: #e63946; --success: #2a9d8f;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg); color: var(--text); margin: 0;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .container { padding: 15px; max-width: 100%; }
+        h1 { font-size: 1.5rem; text-align: center; color: var(--primary); margin: 15px 0; font-weight: 800; }
+        
+        .accordion {
+            background-color: var(--primary); color: white; cursor: pointer; padding: 18px;
+            width: 100%; border: none; text-align: left; font-size: 1.1rem; font-weight: bold;
+            border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between;
+            will-change: transform; transform: translateZ(0);
+        }
+        .active { border-radius: 12px 12px 0 0; margin-bottom: 0; background-color: #023e8a; }
+        
+        .panel {
+            background-color: white; max-height: 0; overflow: hidden;
+            transition: max-height 0.25s ease-out;
+            border-radius: 0 0 12px 12px; border: 1px solid transparent;
+        }
+        .panel-content { padding: 10px 15px 15px; border: 1px solid #eee; border-top: none; border-radius: 0 0 12px 12px; }
+
+        .spot-block { margin: 12px 0; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
+        .spot-name a { color: #023e8a; text-decoration: none; font-weight: bold; border-bottom: 1px solid var(--secondary); font-size: 1.05rem; }
+        .info-row { font-size: 0.9rem; line-height: 1.6; margin: 4px 0; color: #444; }
+        .price { color: var(--highlight); font-weight: bold; }
+        .taxi-box { background: #e6fff4; border: 1px solid var(--success); padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; color: var(--success); font-weight: bold; margin-top: 5px; }
+
+        .memo-area { margin-top: 10px; padding: 8px; background: #fff9db; border-radius: 8px; border: 1px solid #ffe58f; }
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 5px; padding: 8px; font-size: 0.9rem; resize: none; box-sizing: border-box; }
+
+        .taxi-card { background: #333; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999; justify-content: center; align-items: center; flex-direction: column; padding: 20px; }
+        #zoom-text { font-size: 3rem; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌊 沖繩旅遊導航</h1>
+
+    <button class="accordion">🗓️ Day 1：抵達與國際通</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://maps.app.goo.gl/那霸機場">✈️ 那霸機場</a></span>
+                <div class="info-row">單軌至「縣廳前站」💰 <span class="price">300¥</span>。</div>
+                <div class="taxi-box">🚕 推薦：行李多叫車至飯店約 1,500-2,000¥</div>
+            </div>
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://maps.app.goo.gl/波上宮">⛩️ 波上宮 & 海灘</a></span>
+                <div class="info-row">巴士約 240¥。4人推薦叫車 800¥。</div>
+            </div>
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://maps.app.goo.gl/MaxValu牧志">🛍️ MaxValu 牧志店</a></span>
+                <div class="info-row">牧志站左轉沿軌道即達。15:00 飯店 Check-in。</div>
+                <div class="info-row" style="color:var(--highlight); font-weight:bold;">⛈️ 備案：San-A、琉貿、AEON那霸</div>
+            </div>
+            <div class="memo-area"><textarea id="memo-d1" rows="3" oninput="saveMemo('d1')" placeholder="Day 1 備註..."></textarea></div>
+        </div>
+    </div>
+
+    <button class="accordion">🗓️ Day 2：瀨長島與 DMM 水族館</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://maps.app.goo.gl/瀨長島">🏝️ 瀨長島</a></span>
+                <div class="info-row">1. 步行至「國際通入口」搭 <strong>TK02</strong>。💰 <span class="price">360¥</span>。</div>
+            </div>
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://maps.app.goo.gl/DMM水族館">🐬 DMM 水族館 / iias 豐崎</a></span>
+                <div class="info-row">1. 瀨長島原站搭 <strong>TK02B(系滿行)</strong> 前往。💰 <span class="price">200¥</span>。</div>
+                <div class="info-row">2. 回程：iias 搭 <strong>TK02A(那霸行)</strong> 回赤嶺站。💰 <span class="price">280¥</span>。</div>
+                <div class="info-row">3. 赤嶺搭單軌回飯店。💰 <span class="price">290¥</span>。</div>
+            </div>
+            <div class="memo-area"><textarea id="memo-d2" rows="3" oninput="saveMemo('d2')" placeholder="Day 2 備註..."></textarea></div>
+        </div>
+    </div>
+
+    <button class="accordion">🗓️ Day 3：美國村全日</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://maps.app.goo.gl/美國村">🎡 美國村 (全日)</a></span>
+                <div class="info-row">1. <strong>松尾站</strong> (嘉新對面) 搭 120/28/29 號。💰 <span class="price">840¥</span>。</div>
+                <div class="info-row">🍴 順路：A&W 漢堡、Steak House 88 (雞豬海鮮可)。</div>
+            </div>
+            <div class="memo-area"><textarea id="memo-d3" rows="3" oninput="saveMemo('d3')" placeholder="Day 3 備註..."></textarea></div>
+        </div>
+    </div>
+
+    <button class="accordion">🗓️ Day 4：萬座毛與首里城</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://maps.app.goo.gl/萬座毛">🐘 萬座毛 (上午)</a></span>
+                <div class="info-row">松尾站搭 120 號至「恩納村役場前」。💰 <span class="price">1,570¥</span>。</div>
+            </div>
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://maps.app.goo.gl/首里城">🏯 首里城 (下午)</a></span>
+                <div class="info-row">交通：回市區轉單軌至「首里站」。💰 <span class="price">340¥</span>。</div>
+                <div class="taxi-box">🚕 推薦：叫車約 1,300-1,800¥ 直達入口。</div>
+            </div>
+            <div class="memo-area"><textarea id="memo-d4" rows="3" oninput="saveMemo('d4')" placeholder="Day 4 備註..."></textarea></div>
+        </div>
+    </div>
+
+    <button class="accordion">🗓️ Day 5：退房與機場</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name">✈️ 飯店 → 機場</span>
+                <div class="info-row">班機 CI121 (11:50 起飛)。建議 09:30 出發。</div>
+                <div class="taxi-box" style="font-size:1rem;">🚕 首選：計程車直達約 1,500-2,100¥</div>
+            </div>
+            <div class="memo-area"><textarea id="memo-d5" rows="3" oninput="saveMemo('d5')" placeholder="Day 5 備註..."></textarea></div>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px; font-weight:bold; color:var(--primary);">🚕 司機溝通字卡：</div>
+    <div class="taxi-card" onclick="zoomIn('ホテルランタナ那覇国際通り')">飯店 (Lantana)🔍</div>
+    <div class="taxi-card" onclick="zoomIn('那覇空港')">那霸機場🔍</div>
+    <div class="taxi-card" onclick="zoomIn('首里城公園')">首里城🔍</div>
+    <div class="taxi-card" onclick="zoomIn('万座毛')">萬座毛🔍</div>
+
+    <div style="background: #e9ecef; border-radius: 12px; padding: 15px; margin-top: 20px; margin-bottom: 30px;">
+        <h3 style="margin-top:0; font-size: 1.1rem;">📓 備忘錄與備份 (方案 B)</h3>
+        <textarea id="memo-global" rows="3" oninput="saveMemo('global')" placeholder="總備註..."></textarea>
+        <button onclick="exportData()" style="width:48%; padding:12px; background:#6c757d; color:white; border:none; border-radius:8px; margin-top:10px;">📤 產生備份碼</button>
+        <button onclick="importData()" style="width:48%; padding:12px; background:#495057; color:white; border:none; border-radius:8px;">📥 匯入備份碼</button>
+    </div>
+</div>
+
+<div id="zoom-overlay" onclick="zoomOut()"><div id="zoom-text"></div><div style="color:#999;margin-top:20px;">(點擊縮小)</div></div>
+
+<script>
+    // 智慧收折：點擊一項時關閉其他項，動畫優化
+    let currentActive = null;
+    document.querySelectorAll('.accordion').forEach(button => {
+        button.addEventListener('click', function() {
+            const panel = this.nextElementSibling;
+            if (this.classList.contains('active')) {
+                this.classList.remove('active');
+                panel.style.maxHeight = null;
+                currentActive = null;
+            } else {
+                if (currentActive) {
+                    currentActive.classList.remove('active');
+                    currentActive.nextElementSibling.style.maxHeight = null;
+                }
+                this.classList.add('active');
+                panel.style.maxHeight = panel.scrollHeight + "px";
+                currentActive = this;
+            }
+        });
+    });
+
+    // 備忘錄儲存
+    function saveMemo(id) { localStorage.setItem('ok_' + id, document.getElementById('memo-' + id).value); }
+    
+    // 初始化加載所有備忘錄 (包含 Day 4 和 Day 5)
+    window.onload = function() {
+        ['d1', 'd2', 'd3', 'd4', 'd5', 'global'].forEach(id => {
+            const val = localStorage.getItem('ok_' + id);
+            if (val) {
+                const el = document.getElementById('memo-' + id);
+                if(el) el.value = val;
+            }
+        });
+    }
+
+    // 方案 B：資料匯出入
+    function exportData() {
+        let data = {};
+        ['d1', 'd2', 'd3', 'd4', 'd5', 'global'].forEach(id => {
+            const el = document.getElementById('memo-' + id);
+            if(el) data[id] = el.value;
+        });
+        const code = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+        navigator.clipboard.writeText(code).then(() => alert("備份代碼已複製到剪貼簿！"));
+    }
+
+    function importData() {
+        const code = prompt("請貼上備份代碼：");
+        if (code) {
+            try {
+                const data = JSON.parse(decodeURIComponent(escape(atob(code))));
+                Object.keys(data).forEach(id => {
+                    localStorage.setItem('ok_' + id, data[id]);
+                });
+                location.reload();
+            } catch (e) { alert("代碼格式錯誤。"); }
+        }
+    }
+
+    // 放大顯示
+    function zoomIn(text) {
+        document.getElementById('zoom-text').innerText = text;
+        document.getElementById('zoom-overlay').style.display = 'flex';
+    }
+    function zoomOut() { document.getElementById('zoom-overlay').style.display = 'none'; }
+</script>
+</body>
+</html>
