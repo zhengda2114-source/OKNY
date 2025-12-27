@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>沖繩小幫手 - 完整詳細收折版</title>
+    <style>
+        :root {
+            --primary: #0077b6;
+            --secondary: #00b4d8;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333;
+            --highlight: #e63946;
+            --success: #2a9d8f;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .container { padding: 15px; max-width: 100%; }
+        h1 { font-size: 1.6rem; text-align: center; color: var(--primary); margin: 20px 0; font-weight: 800; }
+
+        /* 收折頁樣式 */
+        .accordion {
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: 0.4s;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .active, .accordion:hover { background-color: #023e8a; }
+        .accordion:after { content: '\002B'; font-size: 1.2rem; }
+        .active:after { content: "\2212"; }
+
+        .panel {
+            padding: 0 15px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border-radius: 0 0 12px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            border-top: none;
+        }
+
+        /* 內容細節樣式 */
+        .spot-block { margin: 15px 0; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+        .spot-name { font-weight: 700; color: #023e8a; font-size: 1.05rem; display: block; margin-bottom: 5px; }
+        .info-row { font-size: 0.9rem; margin-bottom: 4px; line-height: 1.5; color: #444; }
+        .price { color: var(--highlight); font-weight: bold; }
+        .taxi-box { background: #e6fff4; border: 1px solid var(--success); padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; margin-top: 5px; color: var(--success); font-weight: bold; }
+        
+        /* 標籤樣式 */
+        .tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-top: 3px; font-weight: bold; }
+        .tag-pork { background: #ffe3e0; color: #af2d2d; }
+        .tag-chicken { background: #fff9db; color: #947600; }
+
+        /* 計程車放大卡 */
+        .taxi-card {
+            background: #333; color: #fff; padding: 15px; border-radius: 12px; 
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .dest-jp { font-size: 1.1rem; font-weight: bold; }
+
+        /* 全螢幕放大 */
+        #zoom-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 9999; justify-content: center; align-items: center;
+            flex-direction: column; padding: 30px; text-align: center;
+        }
+        #zoom-text { font-size: 3.5rem; font-weight: bold; color: #000; margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌊 沖繩旅遊小幫手</h1>
+
+    <button class="accordion">🗓️ Day 1：抵達與波上宮</button>
+    <div class="panel">
+        <div class="spot-block">
+            <span class="spot-name">✈️ 那霸機場 → 飯店</span>
+            <div class="info-row">1. 搭單軌至<strong>「縣廳前站」</strong>，步行 10 分至飯店。</div>
+            <div class="info-row">💰 單軌：<span class="price">300¥</span>。</div>
+            <div class="taxi-box">🚕 推薦：行李多直接叫車約 1,500-2,000¥。</div>
+        </div>
+        <div class="spot-block">
+            <span class="spot-name">⛩️ 波上宮 & 波之上海灘</span>
+            <div class="info-row">• 交通：飯店步行或搭巴士至「西武門」站。</div>
+            <div class="info-row">💰 巴士：單人約 <span class="price">240¥</span>。</div>
+            <div class="taxi-box">🚕 推薦：計程車約 800-1,000¥ (4人同價)。</div>
+        </div>
+        <div class="spot-block">
+            <span class="spot-name">🛍️ 國際通 & MaxValu 牧志店</span>
+            <div class="info-row">• 牧志店：往牧志站方向，左轉沿軌道走即達。</div>
+            <div class="info-row" style="color:var(--highlight); font-weight:bold;">⛈️ 暴雨備案：San-A、琉貿、AEON那霸、PARCO CITY。</div>
+        </div>
+    </div>
+
+    <button class="accordion">🗓️ Day 2：南部 TK02 路線</button>
+    <div class="panel">
+        <div class="spot-block">
+            <span class="spot-name">🏝️ 瀨長島 (Umikaji Terrace)</span>
+            <div class="info-row">1. 步行至 <strong>「國際通入口」</strong> 站。</div>
+            <div class="info-row">2. 搭乘 <strong>TK02</strong> 巴士直達。</div>
+            <div class="info-row">💰 票價：單人 <span class="price">360¥</span>。</div>
+        </div>
+        <div class="spot-block">
+            <span class="spot-name">🐬 DMM 水族館 / iias 豐崎</span>
+            <div class="info-row">1. 於<strong>瀨長島原下車點</strong>搭乘 <strong>TK02B (糸滿行)</strong>。</div>
+            <div class="info-row">💰 票價：單人 <span class="price">200¥</span>。</div>
+            <div class="taxi-box">🚕 推薦：計程車約 1,200¥。</div>
+        </div>
+        <div class="spot-block">
+            <span class="spot-name">🍱 晚餐：串角 小祿店</span>
+            <div class="info-row">1. 從 iias 搭乘 <strong>TK02A (那霸行)</strong> 回「赤嶺站」。</div>
+            <div class="info-row">💰 票價：單人 <span class="price">280¥</span>。</div>
+            <div class="info-row">2. <span class="tag tag-pork">吃豬可</span> <span class="tag tag-chicken">雞/海鮮者可</span>。</div>
+            <div class="info-row">3. <strong>回程：</strong>各自搭單軌回縣廳前 (<span class="price">290¥</span>)。</div>
+        </div>
+    </div>
+
+    <button class="accordion">🗓️ Day 3：美國村全日</button>
+    <div class="panel">
+        <div class="spot-block">
+            <span class="spot-name">🎡 美國村深度遊</span>
+            <div class="info-row">1. 於<strong>「松尾」站</strong> (嘉新酒店對面) 搭乘。</div>
+            <div class="info-row">2. 搭 <strong>120/28/29 號</strong> 巴士至「桑江」站。</div>
+            <div class="info-row">💰 票價：單人 <span class="price">840¥</span>。</div>
+        </div>
+        <div class="spot-block">
+            <span class="spot-name">🍴 推薦餐廳</span>
+            <div class="info-row">• A&W 美浜店、Steak House 88。</div>
+        </div>
+    </div>
+
+    <button class="accordion">🗓️ Day 4：萬座毛與首里城</button>
+    <div class="panel">
+        <div class="spot-block">
+            <span class="spot-name">🐘 萬座毛 (上午)</span>
+            <div class="info-row">1. 「松尾」站搭乘 <strong>120 號</strong>。</div>
+            <div class="info-row">2. 於<strong>「恩納村役場前」</strong>下車。</div>
+            <div class="info-row">💰 票價：單人 <span class="price">1,570¥</span>。</div>
+        </div>
+        <div class="spot-block">
+            <span class="spot-name">🏯 首里城 (下午)</span>
+            <div class="info-row">1. 搭至<strong>「首里站」</strong>，自費 <span class="price">340¥</span>。</div>
+            <div class="taxi-box">🚕 推薦：叫車約 1,300-1,800¥ 直達門口。</div>
+        </div>
+    </div>
+
+    <button class="accordion">🗓️ Day 5：退房返台</button>
+    <div class="panel">
+        <div class="spot-block">
+            <span class="spot-name">✈️ 飯店 → 那霸機場</span>
+            <div class="taxi-box" style="font-size:1rem;">🚕 首選：計程車直達約 1,500-2,100¥。</div>
+        </div>
+    </div>
+
+    <div class="taxi-section-title">🚕 點擊字卡放大</div>
+    <div class="taxi-card" onclick="zoomIn('ホテルランタナ那覇国際通り')">
+        <span class="dest-jp">目的地：飯店</span><span>🔍</span>
+    </div>
+    <div class="taxi-card" onclick="zoomIn('那覇空港')">
+        <span class="dest-jp">目的地：那霸機場</span><span>🔍</span>
+    </div>
+    <div class="taxi-card" onclick="zoomIn('首里城公園')">
+        <span class="dest-jp">目的地：首里城</span><span>🔍</span>
+    </div>
+    <div class="taxi-card" onclick="zoomIn('万座毛')">
+        <span class="dest-jp">目的地：萬座毛</span><span>🔍</span>
+    </div>
+
+</div>
+
+<div id="zoom-overlay" onclick="zoomOut()">
+    <div id="zoom-text"></div>
+    <div style="color:#999;">( 點擊螢幕縮小 )</div>
+</div>
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    for (var i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            } 
+        });
+    }
+    function zoomIn(text) {
+        document.getElementById('zoom-text').innerText = text;
+        document.getElementById('zoom-overlay').style.display = 'flex';
+    }
+    function zoomOut() {
+        document.getElementById('zoom-overlay').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
