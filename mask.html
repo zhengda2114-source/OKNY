@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mask 計算小幫手 - 深色版</title>
+    <style>
+        /* 深色背景與字體設定 */
+        body { 
+            font-family: -apple-system, "Segoe UI", sans-serif; 
+            background-color: #121212; 
+            color: #e0e0e0; 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px; 
+            margin: 0;
+        }
+        .card { 
+            background: #1e1e1e; 
+            padding: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            width: 100%; 
+            max-width: 450px; 
+            border: 1px solid #333;
+        }
+        h2 { color: #64b5f6; text-align: center; margin-bottom: 25px; font-weight: 300; letter-spacing: 1px; }
+        
+        .input-section { margin-bottom: 25px; text-align: center; }
+        .slash { font-size: 28px; font-weight: bold; color: #64b5f6; margin-right: 5px; }
+        
+        input { 
+            background: #2c2c2c;
+            color: #ffffff;
+            width: 120px; 
+            padding: 12px; 
+            font-size: 24px; 
+            border: 2px solid #444; 
+            border-radius: 10px; 
+            text-align: center; 
+            outline: none; 
+            transition: 0.3s; 
+        }
+        input:focus { border-color: #64b5f6; box-shadow: 0 0 12px rgba(100,181,246,0.3); }
+        input::placeholder { color: #555; }
+
+        .result-area { 
+            background: #252525; 
+            border-left: 5px solid #64b5f6; 
+            padding: 18px; 
+            border-radius: 8px; 
+            margin-top: 20px; 
+            min-height: 80px; 
+        }
+        .label { font-size: 0.85rem; color: #999; margin-bottom: 8px; text-transform: uppercase; }
+        .value { font-size: 1.6rem; font-weight: bold; color: #ff5252; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+        
+        .formula-box { margin-top: 25px; padding-top: 15px; border-top: 1px solid #333; }
+        .step { 
+            background: #2a261a; 
+            color: #d4d4d4;
+            padding: 15px; 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            line-height: 1.8; 
+            border: 1px dashed #4d452d; 
+            min-height: 100px; 
+        }
+        b { color: #64b5f6; }
+        
+        /* 移除 number input 的箭頭 */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Mask 計算器</h2>
+    
+    <div class="input-section">
+        <span class="slash">/</span>
+        <input type="number" id="cidr" placeholder="32" min="0" max="32" 
+               oninput="runCalc()" 
+               onfocus="this.select()"
+               autofocus>
+    </div>
+
+    <div class="result-area">
+        <div class="label">Subnet Mask</div>
+        <div id="maskVal" class="value">---.---.---.---</div>
+    </div>
+
+    <div class="formula-box">
+        <div class="label">💡 計算步驟拆解：</div>
+        <div id="steps" class="step">
+            請輸入 CIDR 數值（如 26）開始計算。
+        </div>
+    </div>
+</div>
+
+<script>
+function runCalc() {
+    let cidrVal = document.getElementById('cidr').value;
+    let stepsDiv = document.getElementById('steps');
+    let maskDiv = document.getElementById('maskVal');
+
+    if (cidrVal === "") {
+        maskDiv.innerText = "---.---.---.---";
+        stepsDiv.innerText = "請輸入 CIDR 數值（如 26）開始計算。";
+        return;
+    }
+
+    let cidr = parseInt(cidrVal);
+    if (cidr < 0 || cidr > 32) {
+        maskDiv.innerText = "Error";
+        stepsDiv.innerText = "請輸入 0 到 32 之間的有效數字。";
+        return;
+    }
+
+    // 1. 計算遮罩
+    let mask = [];
+    for (let i = 0; i < 4; i++) {
+        let bits = Math.min(Math.max(cidr - i * 8, 0), 8);
+        mask.push(256 - Math.pow(2, 8 - bits));
+    }
+    let maskStr = mask.join('.');
+    maskDiv.innerText = maskStr;
+
+    // 2. 產出說明
+    let hostBits = 32 - cidr;
+    let hosts = Math.max(Math.pow(2, hostBits) - 2, 0);
+    
+    if (cidr >= 24) {
+        let magicNum = Math.pow(2, 32 - cidr);
+        stepsDiv.innerHTML = `
+            1. 剩餘位元：32 - <b>${cidr}</b> = <b>${hostBits}</b> bit<br>
+            2. 區段增量：2<sup>${hostBits}</sup> = <b>${magicNum}</b><br>
+            3. 遮罩數值：256 - ${magicNum} = <b>${mask[3]}</b><br>
+            4. 可用主機：${magicNum} - 2 = <b>${hosts.toLocaleString()}</b>
+        `;
+    } else {
+        stepsDiv.innerHTML = `
+            此為大範圍遮罩 (/${cidr})<br>
+            計算邏輯：每 8 bits 填滿為 255<br>
+            結果：<b>${maskStr}</b>
+        `;
+    }
+}
+</script>
+
+</body>
+</html>
