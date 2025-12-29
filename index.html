@@ -6,65 +6,66 @@
     <title>2026 沖繩旅遊小幫手</title>
     <style>
         :root {
-            --primary: #023e8a; --secondary: #0077b6; --bg: #f8f9fa;
-            --card: #ffffff; --text: #333; --danger: #e63946; --safe: #2a9d8f;
+            --primary: #1a3a5f; --secondary: #2c5282; --accent: #4299e1;
+            --bg: #f0f4f8; --card: #ffffff; --text: #2d3748;
+            --danger: #e53e3e; --safe: #38a169;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg); color: var(--text); margin: 0;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
-        .container { padding: 10px 15px; }
-        h1 { font-size: 1.5rem; text-align: center; color: var(--primary); margin: 15px 0; font-weight: 800; }
-        
-        /* 匯率區 */
-        .fx-section { 
+        .container { padding: 12px 16px; }
+        header { text-align: center; padding: 20px 0; }
+        h1 { font-size: 1.6rem; color: var(--primary); margin: 0; font-weight: 800; letter-spacing: 1px; }
+
+        .fx-card { 
             background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            color: white; padding: 18px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: white; padding: 20px; border-radius: 20px; margin-bottom: 25px; 
+            box-shadow: 0 10px 20px rgba(26, 58, 95, 0.2);
         }
-        .fx-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .fx-input { width: 110px; border-radius: 8px; border: none; padding: 8px; font-size: 1.2rem; text-align: center; font-weight: bold; }
-        .fx-rate-ctrl { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; }
-        #rateInput { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; border-radius: 4px; text-align: center; width: 75px; padding: 3px; font-size: 0.9rem; }
-        .btn-update { background: white; color: var(--primary); border: none; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.75rem; }
+        .fx-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .fx-input { width: 110px; border-radius: 10px; border: none; padding: 10px; font-size: 1.2rem; text-align: center; font-weight: 700; background: rgba(255,255,255,0.95); color: var(--primary); }
+        .fx-rate-ctrl { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 12px; }
+        #rateInput { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.5); color: white; border-radius: 6px; text-align: center; width: 70px; padding: 4px; font-size: 0.85rem; }
+        .btn-update { background: var(--accent); color: white; border: none; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.75rem; cursor: pointer; }
 
-        /* 行程收折 */
         .day-btn {
-            background-color: var(--card); color: var(--primary); cursor: pointer; padding: 18px;
-            width: 100%; border: none; text-align: left; font-size: 1.1rem; font-weight: 700;
-            border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background-color: var(--card); color: var(--primary); cursor: pointer; padding: 20px;
+            width: 100%; border: none; text-align: left; font-size: 1.15rem; font-weight: 700;
+            border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        .day-btn.active { border-radius: 12px 12px 0 0; margin-bottom: 0; background-color: var(--primary); color: white; }
-        .panel { background-color: var(--card); max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; border-radius: 0 0 12px 12px; margin-bottom: 15px; border: 1px solid #eee; border-top: none; }
-        .inner { padding: 15px; }
+        .day-btn.active { border-radius: 15px 15px 0 0; margin-bottom: 0; background-color: var(--primary); color: white; }
+        .panel { background-color: var(--card); max-height: 0; overflow: hidden; transition: max-height 0.35s ease-out; border-radius: 0 0 15px 15px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-top: none; }
+        .inner { padding: 18px; }
 
-        /* 行程內容 */
-        .spot { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
-        .spot-name a { color: var(--primary); text-decoration: none; font-weight: 800; font-size: 1.1rem; border-bottom: 1px solid var(--secondary); }
-        .note { font-size: 0.85rem; color: #555; line-height: 1.6; margin: 4px 0; }
+        .spot { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #edf2f7; }
+        .spot:last-child { border-bottom: none; }
+        .spot-name a { color: var(--secondary); text-decoration: none; font-weight: 800; font-size: 1.15rem; display: block; margin-bottom: 6px; }
+        .note { font-size: 0.95rem; color: #4a5568; line-height: 1.6; margin: 6px 0; }
         .price-tag { color: var(--danger); font-weight: bold; }
-        .taxi-tip { background: #e6fff4; border: 1px solid var(--safe); padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; color: var(--safe); font-weight: bold; margin-top: 5px; display: block; }
-        .food-note { background: #fff5f5; color: #af2d2d; padding: 5px 8px; border-radius: 5px; font-size: 0.8rem; border-left: 3px solid #af2d2d; margin-top: 5px; }
+        .taxi-tip { background: #f0fff4; border: 1px solid #c6f6d5; padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; color: var(--safe); font-weight: bold; margin-top: 8px; display: block; }
+        .food-note { background: #fff5f5; color: #c53030; padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; border-left: 4px solid #c53030; margin-top: 8px; }
 
-        /* 字卡區 */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .card { background: #333; color: #fff; padding: 15px; border-radius: 12px; text-align: center; font-size: 0.9rem; font-weight: 600; }
-        #overlay { display: none; position: fixed; inset: 0; background: #fff; z-index: 9999; justify-content: center; align-items: center; flex-direction: column; padding: 30px; }
-        #zoomMain { font-size: 2.8rem; font-weight: 900; line-height: 1.2; color: #000; text-align: center; }
-        #zoomSub { font-size: 1.5rem; font-weight: 600; color: #555; margin-top: 15px; text-align: center; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .card { background: #2d3748; color: #fff; padding: 18px; border-radius: 14px; text-align: center; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        #overlay { display: none; position: fixed; inset: 0; background: #fff; z-index: 9999; justify-content: center; align-items: center; flex-direction: column; padding: 30px; text-align: center; }
+        #zoomMain { font-size: 3.2rem; font-weight: 900; line-height: 1.1; color: #000; margin-bottom: 15px; }
+        #zoomSub { font-size: 1.8rem; font-weight: 600; color: #4a5568; line-height: 1.4; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>2026 沖繩旅遊小幫手</h1>
+    <header><h1>2026 沖繩旅遊小幫手</h1></header>
 
-    <div class="fx-section">
+    <div class="fx-card">
         <div class="fx-row"><span>💴 日幣 JPY</span><input type="number" id="jpyIn" value="1000" class="fx-input" oninput="calc()"></div>
-        <div class="fx-row"><span>🇹🇼 台幣 TWD</span><span style="font-size: 1.6rem; font-weight: 900;">≈ <span id="twdOut">---</span></span></div>
+        <div class="fx-row"><span>🇹🇼 台幣 TWD</span><span style="font-size: 1.8rem; font-weight: 900;">≈ <span id="twdOut">---</span></span></div>
         <div class="fx-rate-ctrl">
-            <div>手動微調匯率：<input type="number" id="rateInput" step="0.0001" oninput="userEditRate()"></div>
+            <div>台銀微調：<input type="number" id="rateInput" step="0.0001" oninput="userEditRate()"></div>
             <button class="btn-update" onclick="updateRate()">更新匯率</button>
         </div>
     </div>
@@ -72,142 +73,141 @@
     <button class="day-btn">🗓️ Day 1：抵達那霸 / 波上宮</button>
     <div class="panel"><div class="inner">
         <div class="spot">
-            <a href="https://www.google.com/maps/search/American+Village+Okinawa9">✈️ 那霸機場 (10:45)</a>
-            <div class="note">交通：搭單軌電車「機場站」➔ 「縣廳前站」💰 <span class="price-tag">300¥</span>。</div>
-            <span class="taxi-tip">🚕 推薦：4人+行李叫車約 1,600-2,100¥ 直達飯店。</span>
+            <a href="https://www.google.com/maps/search/?api=1&query=那霸機場">那霸機場 (OKA)</a>
+            <div class="note">10:45 抵達。2樓搭單軌「機場站」➔ 「縣廳前站」💰 <span class="price-tag">300¥</span>。</div>
+            <span class="taxi-tip">🚕 推薦：4人加行李直接叫車約 1,600-2,100¥，直達 Lantana。</span>
         </div>
         <div class="spot">
-            <a href="https://www.google.com/maps/search/Manzamo0">🏨 HOTEL LANTANA (飯店)</a>
-            <div class="note">國際通中心。15:00 後入住。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Lantana+Naha+Kokusai-Dori">HOTEL LANTANA (飯店)</a>
+            <div class="note">地址：那覇市松尾2-8-1。15:00 後入住。</div>
         </div>
         <div class="spot">
-            <a href="https://www.google.com/maps/search/Manzamo1">⛩️ 波上宮 & 波之上海灘</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=波上宮">波上宮 & 護國寺</a>
             <div class="note">交通：至「縣廳前」搭巴士至「西武門」站。💰 <span class="price-tag">240¥</span>。</div>
         </div>
         <div class="spot">
-            <a href="https://www.google.com/maps/search/Manzamo2">🛒 MaxValu 牧志店</a>
-            <div class="note">走法：飯店出發沿國際通往牧志站走 ➔ 牧志站後方左轉沿軌道下前行即達。</div>
-            <div class="note" style="color:var(--danger); font-weight:bold;">⛈️ 暴雨備案：琉貿百貨、AEON那霸、PARCO CITY。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=MaxValu+牧志店">MaxValu 牧志店</a>
+            <div class="note">走法：飯店沿國際通往牧志站走 ➔ 牧志站後方左轉沿軌道下直走。</div>
+            <div class="note" style="color:var(--danger); font-weight:bold;">⛈️ 暴雨備案：琉貿百貨、AEON那霸、PARCO CITY</div>
         </div>
     </div></div>
 
     <button class="day-btn">🗓️ Day 2：瀨長島與 DMM 水族館</button>
     <div class="panel"><div class="inner">
         <div class="spot">
-            <a href="https://www.google.com/maps/search/Manzamo3">🏝️ 瀨長島 Umikaji Terrace</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=瀨長島Umikaji+Terrace">瀨長島 Umikaji Terrace</a>
             <div class="note">「國際通入口」站搭 <strong>TK02</strong>。💰 <span class="price-tag">360¥</span>。</div>
         </div>
         <div class="spot">
-            <a href="https://www.google.com/maps/search/Manzamo4">🐬 DMM 水族館 / iias 豐崎</a>
-            <div class="note">瀨長島原處搭 <strong>TK02B (糸滿行)</strong> <span class="price-tag">200¥</span>。</div>
-            <div class="note">回程：iias 搭 <strong>TK02A (那霸行)</strong> 回赤嶺站轉單軌。</div>
-            <div class="food-note">🍱 串角小祿店：豬肉、雞肉、海鮮選項齊全。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=DMM+Kariyushi+Aquarium">DMM 水族館 / iias 豐崎</a>
+            <div class="note">去程：瀨長島搭 <strong>TK02B (糸滿行)</strong> <span class="price-tag">200¥</span>。</div>
+            <div class="note">回程：iias 搭 <strong>TK02A (那霸行)</strong> 至赤嶺站轉單軌。</div>
+            <div class="food-note">🍱 串角小祿店：全員分流餐點。</div>
         </div>
     </div></div>
 
-    <button class="day-btn">🗓️ Day 3：美國村全日 (PASS 適用)</button>
+    <button class="day-btn">🗓️ Day 3：美國村全日 (PASS)</button>
     <div class="panel"><div class="inner">
         <div class="spot">
-            <a href="https://www.google.com/maps/search/Manzamo5">🎡 美國村 American Village</a>
-            <div class="note">「松尾」站 (嘉新酒店對面) 搭 <strong>120/28/29</strong>。💰 <span class="price-tag">840¥</span>。</div>
-            <div class="food-note">🍴 A&W 漢堡 / 88 牛排：全員適用。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=沖繩美國村">美國村 American Village</a>
+            <div class="note">站點：「松尾」站 (嘉新酒店對面)。</div>
+            <div class="note">搭乘 <strong>120/28/29</strong> 號巴士。💰 <span class="price-tag">840¥</span> (PASS可用)。</div>
+            <div class="food-note">🍴 A&W 漢堡 / 88牛排：全員適用。</div>
         </div>
     </div></div>
 
-    <button class="day-btn">🗓️ Day 4：萬座毛與首里城 (PASS 適用)</button>
+    <button class="day-btn">🗓️ Day 4：萬座毛與首里城 (PASS)</button>
     <div class="panel"><div class="inner">
         <div class="spot">
-            <a href="https://www.google.com/maps/search/Manzamo6">🐘 萬座毛 (Cape Manzamo)</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=萬座毛">萬座毛 (Cape Manzamo)</a>
             <div class="note">「松尾」搭 <strong>120</strong> 至「恩納村役場前」。💰 <span class="price-tag">1,570¥</span>。</div>
         </div>
         <div class="spot">
-            <a href="https://www.google.com/maps/search/Manzamo7">🏯 首里城公園</a>
-            <div class="note">交通：巴士返市區轉輕軌至「首里站」。</div>
-            <span class="taxi-tip">🚕 推薦：首里站搭計程車約 1,300¥ 直達門口。</span>
+            <a href="https://www.google.com/maps/search/?api=1&query=首里城">首里城公園</a>
+            <div class="note">回縣廳前轉輕軌至首里站。</div>
+            <span class="taxi-tip">🚕 推薦：首里站搭計程車直達入口約 1,300¥。</span>
         </div>
     </div></div>
 
     <button class="day-btn">🗓️ Day 5：退房與賦歸</button>
     <div class="panel"><div class="inner">
         <div class="spot">
-            <span>✈️ 飯店 ➔ 那霸機場</span>
-            <div class="note">11:50 班機。建議 09:30 前退房。</div>
-            <span class="taxi-tip">🚕 計程車直達約 1,500-2,100¥。</span>
+            <span style="font-weight:bold; font-size:1.1rem; color:var(--primary);">那霸機場 (11:50 班機)</span>
+            <div class="note">建議 09:30 前完成退房，叫車直達。</div>
+            <span class="taxi-tip">🚕 建議：計程車直達約 1,500-2,100¥。</span>
         </div>
     </div></div>
 
-    <div style="margin-top: 15px; font-weight: bold; color: var(--primary);">🚕 計程車溝通字卡 (點擊放大)：</div>
     <div class="grid">
-        <div class="card" onclick="zoomHotel('ホテルランタナ那覇国際通り', '沖縄県那覇市松尾2丁目8-1')">飯店</div>
-        <div class="card" onclick="zoomSpot('那覇空港', '那霸機場')">機場</div>
-        <div class="card" onclick="zoomSpot('波上宮', '波上宮')">波上宮</div>
-        <div class="card" onclick="zoomSpot('アメリカンビレッジ', '美國村')">美國村</div>
-        <div class="card" onclick="zoomSpot('首里城公園', '首里城')">首里城</div>
-        <div class="card" onclick="zoomSpot('万座毛', '萬座毛')">萬座毛</div>
-        <div class="card" style="grid-column: span 2; background:#0077b6;" onclick="zoomSpot('トランクを開けてください', '請打開後車廂')">🧳 請開後車廂</div>
+        <div class="card" onclick="zoomH('ホテルランタナ那覇国際通り', '沖縄県那覇市松尾2丁目8-1')">🏨 飯店卡</div>
+        <div class="card" onclick="zoomS('那覇空港', '那霸機場')">✈️ 機場卡</div>
+        <div class="card" onclick="zoomS('アメリカンビレッジ', '美國村')">🎡 美國村</div>
+        <div class="card" onclick="zoomS('首里城公園', '首里城')">🏯 首里城</div>
+        <div class="card" onclick="zoomS('万座毛', '萬座毛')">🐘 萬座毛</div>
+        <div class="card" style="grid-column: span 2; background:var(--accent);" onclick="zoomS('トランクを開けてください', '請打開後車廂')">🧳 開後車廂</div>
     </div>
 </div>
 
 <div id="overlay" onclick="this.style.display='none'">
     <div id="zoomMain"></div>
     <div id="zoomSub"></div>
-    <p style="color:#999;margin-top:40px;">(點擊畫面關閉)</p>
+    <p style="color:#718096;margin-top:40px;font-weight:bold;">( 點擊任何地方關閉 )</p>
 </div>
 
 <script>
-    // 預設匯率 (台銀賣出參考)
     let exchangeRate = 0.2049;
 
     function userEditRate() {
         const val = document.getElementById('rateInput').value;
         if (val) {
             exchangeRate = parseFloat(val);
-            localStorage.setItem('trip_rate', exchangeRate);
+            localStorage.setItem('v2026_rate', exchangeRate);
             calc();
         }
     }
 
     function updateRate() {
-        // 此處模擬 API 獲取最新台銀匯率
-        const latestRate = 0.2049; 
-        exchangeRate = latestRate;
-        document.getElementById('rateInput').value = exchangeRate;
-        localStorage.setItem('trip_rate', exchangeRate);
+        const latest = 0.2049; 
+        exchangeRate = latest;
+        document.getElementById('rateInput').value = latest;
+        localStorage.setItem('v2026_rate', latest);
         calc();
-        alert("已更新至台銀今日最新匯率參考值：" + exchangeRate);
+        alert("已更新至最新匯率參考值：" + latest);
     }
 
     function calc() {
         const jpy = document.getElementById('jpyIn').value;
-        document.getElementById('twdOut').innerText = Math.round(jpy * exchangeRate);
+        document.getElementById('twdOut').innerText = Math.round(jpy * exchangeRate).toLocaleString();
     }
 
+    let activeBtn = null;
     document.querySelectorAll('.day-btn').forEach(btn => {
         btn.onclick = function() {
+            if (activeBtn && activeBtn !== this) {
+                activeBtn.classList.remove('active');
+                activeBtn.nextElementSibling.style.maxHeight = null;
+            }
             this.classList.toggle('active');
             let panel = this.nextElementSibling;
             panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px";
+            activeBtn = this.classList.contains('active') ? this : null;
         }
     });
 
-    // 景點字卡：日文 + 中文
-    function zoomSpot(jp, cn) {
+    function zoomS(jp, cn) {
         document.getElementById('zoomMain').innerText = jp;
         document.getElementById('zoomSub').innerText = cn;
-        document.getElementById('zoomSub').style.display = 'block';
         document.getElementById('overlay').style.display = 'flex';
     }
 
-    // 飯店字卡：嚴格日文店名 + 日文地址
-    function zoomHotel(name, addr) {
+    function zoomH(name, addr) {
         document.getElementById('zoomMain').innerText = name;
         document.getElementById('zoomSub').innerText = addr;
-        document.getElementById('zoomSub').style.display = 'block';
         document.getElementById('overlay').style.display = 'flex';
     }
 
     window.onload = function() {
-        const saved = localStorage.getItem('trip_rate');
+        const saved = localStorage.getItem('v2026_rate');
         if (saved) exchangeRate = parseFloat(saved);
         document.getElementById('rateInput').value = exchangeRate;
         calc();
