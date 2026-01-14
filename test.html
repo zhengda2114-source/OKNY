@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>沖繩 2025 終極導航</title>
+    <style>
+        :root {
+            --primary: #0077b6; --secondary: #00b4d8; --bg: #f8f9fa;
+            --card-bg: #ffffff; --text: #333; --highlight: #e63946; --success: #2a9d8f;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg); color: var(--text); margin: 0;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .container { padding: 10px 15px; max-width: 100%; }
+        h1 { font-size: 1.5rem; text-align: center; color: var(--primary); margin: 10px 0; font-weight: 800; }
+        
+        /* 行程進度條 */
+        .progress-container { background: #e0e0e0; height: 8px; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
+        #progress-bar { width: 0%; height: 100%; background: linear-gradient(to right, var(--secondary), var(--primary)); transition: width 0.3s ease; }
+
+        /* 匯率計算機 */
+        .fx-calc { 
+            background: linear-gradient(135deg, #023e8a, #0077b6); 
+            color: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .fx-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .fx-calc input { width: 90px; border-radius: 8px; border: none; padding: 8px; font-size: 1.1rem; text-align: center; background: white; color: #333; }
+        .fx-info { font-size: 0.75rem; opacity: 0.9; text-align: right; display: block; margin-top: 5px; }
+        #rateInput { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5); width: 65px; font-size: 0.75rem; padding: 2px; text-align: center; }
+
+        /* iPhone X 優化收折頁 */
+        .accordion {
+            background-color: var(--primary); color: white; cursor: pointer; padding: 18px;
+            width: 100%; border: none; text-align: left; font-size: 1.1rem; font-weight: bold;
+            border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .active { border-radius: 12px 12px 0 0; margin-bottom: 0; background-color: #023e8a; }
+        .panel { background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; border-radius: 0 0 12px 12px; margin-bottom: 15px; border: 1px solid #eee; border-top: none; }
+        .panel-content { padding: 15px; }
+
+        /* 行程細節 */
+        .spot-block { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; position: relative; }
+        .spot-name a { color: #023e8a; text-decoration: none; font-weight: bold; border-bottom: 1px solid var(--secondary); font-size: 1.05rem; }
+        .price { color: var(--highlight); font-weight: bold; }
+        .taxi-box { background: #e6fff4; border: 1px solid var(--success); padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; color: var(--success); font-weight: bold; margin-top: 5px; }
+        
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px; font-size: 0.9rem; resize: none; box-sizing: border-box; background: #fff9db; }
+
+        /* 字卡放大 */
+        .taxi-card { background: #333; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999; justify-content: center; align-items: center; flex-direction: column; padding: 20px; text-align: center; }
+        #zoom-text { font-size: 3rem; font-weight: bold; word-break: break-all; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌊 沖繩旅遊導航</h1>
+
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div class="fx-calc">
+        <div class="fx-row">
+            <span>💴 日幣 JPY</span>
+            <input type="number" id="jpyInput" value="1000" oninput="convertFX()">
+        </div>
+        <div class="fx-row">
+            <span>🇹🇼 台幣 TWD</span>
+            <span style="font-size: 1.4rem; font-weight: bold;">≈ <span id="ntdResult">---</span> 元</span>
+        </div>
+        <div class="fx-info">
+            匯率微調：<input type="number" id="rateInput" step="0.0001" oninput="manualRateChange()"> (連線中)
+        </div>
+    </div>
+
+    <button class="accordion" onclick="updateProgress(20)">🗓️ Day 1：抵達那霸 / 波上宮</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://www.google.com/maps/search/?api=1&query=那霸機場">✈️ 那霸機場 (OKA)</a></span>
+                <div class="info-row">單軌電車至「縣廳前站」💰 <span class="price">300¥</span>。</div>
+                <div class="taxi-box">🚕 4人行李多叫計程車約 1,500-2,100¥</div>
+            </div>
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://www.google.com/maps/search/?api=1&query=HOTEL+LANTANA+那霸國際通">🏨 HOTEL LANTANA</a></span>
+                <div class="info-row">起點飯店。MaxValu 牧志店：牧志站左轉走軌道下即達。</div>
+            </div>
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://www.google.com/maps/search/?api=1&query=波上宮">⛩️ 波上宮 / 海灘</a></span>
+                <div class="info-row">巴士 240¥ / 叫車 800¥。</div>
+            </div>
+            <textarea id="memo-d1" rows="3" oninput="saveMemo('d1')" placeholder="Day 1 筆記..."></textarea>
+        </div>
+    </div>
+
+    <button class="accordion" onclick="updateProgress(40)">🗓️ Day 2：瀨長島與 DMM 水族館</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://www.google.com/maps/search/?api=1&query=瀨長島">🏝️ 瀨長島</a></span>
+                <div class="info-row">國際通入口站搭 <strong>TK02</strong>。💰 <span class="price">360¥</span>。</div>
+            </div>
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://www.google.com/maps/search/?api=1&query=DMM水族館">🐬 DMM 水族館 / iias</a></span>
+                <div class="info-row">搭 <strong>TK02B (系滿行)</strong> 前往；回程搭 <strong>TK02A (那霸行)</strong> 回赤嶺。</div>
+            </div>
+            <textarea id="memo-d2" rows="3" oninput="saveMemo('d2')" placeholder="Day 2 筆記..."></textarea>
+        </div>
+    </div>
+
+    <button class="accordion" onclick="updateProgress(60)">🗓️ Day 3：美國村全日 (PASS)</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://www.google.com/maps/search/?api=1&query=沖繩美國村">🎡 美國村</a></span>
+                <div class="info-row">松尾站 (飯店左轉嘉新酒店對面) 搭 120/28/29。💰 <span class="price">840¥</span>。</div>
+                <div class="info-row">順路餐飲：A&W 漢堡、Steak House 88。</div>
+            </div>
+            <textarea id="memo-d3" rows="3" oninput="saveMemo('d3')"></textarea>
+        </div>
+    </div>
+
+    <button class="accordion" onclick="updateProgress(80)">🗓️ Day 4：萬座毛與首里城</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name"><a href="https://www.google.com/maps/search/?api=1&query=萬座毛">🐘 萬座毛</a></span> ➔ <span class="spot-name"><a href="https://www.google.com/maps/search/?api=1&query=首里城">🏯 首里城</a></span>
+                <div class="info-row">萬座毛 1,570¥。首里城建議輕軌到首里站後叫車。</div>
+            </div>
+            <textarea id="memo-d4" rows="3" oninput="saveMemo('d4')"></textarea>
+        </div>
+    </div>
+
+    <button class="accordion" onclick="updateProgress(100)">🗓️ Day 5：退房與離境</button>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="spot-block">
+                <span class="spot-name">✈️ 飯店 ➔ 那霸機場</span>
+                <div class="taxi-box">🚕 09:30 退房叫計程車約 2,000¥ 直達機場。</div>
+            </div>
+            <textarea id="memo-d5" rows="3" oninput="saveMemo('d5')"></textarea>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; font-weight:bold; color:var(--primary);">🚕 點擊放大字卡給司機：</div>
+    <div class="taxi-card" onclick="zoomIn('ホテルランタナ那覇国際通り')">飯店 (Lantana)🔍</div>
+    <div class="taxi-card" onclick="zoomIn('那覇空港')">那霸機場🔍</div>
+    <div class="taxi-card" onclick="zoomIn('首里城公園')">首里城🔍</div>
+
+    <button onclick="exportData()" style="width:100%; padding:15px; background:#6c757d; color:white; border:none; border-radius:12px; margin-top:20px; font-weight:bold;">📤 複製備份碼 (方案 B)</button>
+
+</div>
+
+<div id="zoom-overlay" onclick="zoomOut()"><div id="zoom-text"></div><div style="color:#999;margin-top:20px;">(點擊關閉)</div></div>
+
+<script>
+    let exchangeRate = 0.22;
+
+    // 進度條邏輯
+    function updateProgress(val) {
+        document.getElementById('progress-bar').style.width = val + '%';
+    }
+
+    // 匯率 API 連接
+    async function fetchRate() {
+        try {
+            const response = await fetch('https://open.er-api.com/v6/latest/JPY');
+            const data = await response.json();
+            if (data && data.rates && data.rates.TWD) {
+                exchangeRate = data.rates.TWD;
+                document.getElementById('rateInput').value = exchangeRate.toFixed(4);
+                convertFX();
+            }
+        } catch (e) {
+            document.getElementById('rateInput').value = exchangeRate;
+            convertFX();
+        }
+    }
+
+    function manualRateChange() {
+        exchangeRate = parseFloat(document.getElementById('rateInput').value) || 0;
+        convertFX();
+    }
+
+    function convertFX() {
+        const jpy = document.getElementById('jpyInput').value;
+        document.getElementById('ntdResult').innerText = Math.round(jpy * exchangeRate);
+    }
+
+    // 智慧連動收折
+    let currentActive = null;
+    document.querySelectorAll('.accordion').forEach(button => {
+        button.addEventListener('click', function() {
+            const panel = this.nextElementSibling;
+            if (this.classList.contains('active')) {
+                this.classList.remove('active');
+                panel.style.maxHeight = null;
+                currentActive = null;
+            } else {
+                if (currentActive) {
+                    currentActive.classList.remove('active');
+                    currentActive.nextElementSibling.style.maxHeight = null;
+                }
+                this.classList.add('active');
+                panel.style.maxHeight = panel.scrollHeight + "px";
+                currentActive = this;
+            }
+        });
+    });
+
+    // 數據持久化
+    function saveMemo(id) { localStorage.setItem('ok_' + id, document.getElementById('memo-' + id).value); }
+    window.onload = function() {
+        fetchRate();
+        ['d1', 'd2', 'd3', 'd4', 'd5'].forEach(id => {
+            const val = localStorage.getItem('ok_' + id);
+            if (val) document.getElementById('memo-' + id).value = val;
+        });
+    };
+
+    function zoomIn(text) {
+        document.getElementById('zoom-text').innerText = text;
+        document.getElementById('zoom-overlay').style.display = 'flex';
+    }
+    function zoomOut() { document.getElementById('zoom-overlay').style.display = 'none'; }
+
+    function exportData() {
+        let data = {};
+        ['d1', 'd2', 'd3', 'd4', 'd5'].forEach(id => { data[id] = document.getElementById('memo-' + id).value; });
+        const code = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+        navigator.clipboard.writeText(code).then(() => alert("備份碼已複製！"));
+    }
+</script>
+</body>
+</html>
